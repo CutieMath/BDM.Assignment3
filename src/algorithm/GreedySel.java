@@ -21,11 +21,9 @@ public class GreedySel {
 
         int resultOneInf = 0;
         List<Billboard> billboardListCopy = new ArrayList<>(billboardList);
-        List<Billboard> billboardListCopy2 = new ArrayList<>(billboardList);
-
 
         ArrayList<Billboard> resultOne = stepOne(billboardListCopy);
-        ArrayList<Billboard> resultTwo = stepTwo(billboardListCopy2);
+        ArrayList<Billboard> resultTwo = stepTwo(billboardList);
 
 
         // Step Three

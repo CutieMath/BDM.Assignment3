@@ -4,10 +4,7 @@ import entity.Billboard;
 import entity.BillboardCombination;
 import entity.BillboardSet;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 
 public class EnumSel {
 
@@ -37,7 +34,7 @@ public class EnumSel {
 
         // Phase 3
         // convert result sets into billboards ArrayList
-        for(int i = 0; i < resultOne.billboardsInfoArray.size(); i ++){
+        for (int i = 0; i < resultOne.billboardsInfoArray.size(); i++) {
             String content[] = resultOne.billboardsInfoArray.get(i).split(",");
             String billboardID = content[0];
             int billboardInf = Integer.parseInt(content[1]);
@@ -46,7 +43,7 @@ public class EnumSel {
             resultOneList.add(billboard);
         }
 
-        for(int i = 0; i < resultTwo.billboardsInfoArray.size(); i ++){
+        for (int i = 0; i < resultTwo.billboardsInfoArray.size(); i++) {
             String content[] = resultTwo.billboardsInfoArray.get(i).split(",");
             String billboardID = content[0];
             int billboardInf = Integer.parseInt(content[1]);
@@ -55,13 +52,15 @@ public class EnumSel {
             resultTwoList.add(billboard);
         }
 
+
         // Compare H1 & H2
         // Return the sets with the highest influence under budget
-        if(resultOne.inf > resultTwo.inf){
+        if (resultOne.inf > resultTwo.inf) {
             resultList = resultOneList;
-        }else{
+        } else {
             resultList = resultTwoList;
         }
+
     }
 
     /**
@@ -69,34 +68,34 @@ public class EnumSel {
      * Enumerate the billboards and get the set with the highest influence under budget
      * One set can have no greater than 2 elements
      **/
-    public BillboardSet phaseOne(List<Billboard> billboardList){
+    public BillboardSet phaseOne(List<Billboard> billboardList) {
 
         // Initiates
         BillboardSet billboardSet = new BillboardSet();
 
         // Max influence for one billboard per set
-        for(int i = 0; i < billboardList.size(); i ++){
-            if((billboardSet == null || billboardList.get(i).getInf() > billboardSet.inf)
-                    && billboardList.get(i).getPrice() <= budget){
+        for (int i = 0; i < billboardList.size(); i++) {
+            // If the board has larger influence under budget, assign to result
+            if ((billboardSet == null || billboardList.get(i).getInf() > billboardSet.inf)
+                    && billboardList.get(i).getPrice() <= budget) {
                 BillboardSet selectedBoard = new BillboardSet();
                 selectedBoard.addBoard(billboardList.get(i));
-                // If the board has bigger influence under budget, assign to result
                 billboardSet = selectedBoard;
             }
         }
 
         // Max influence for two billboards per set
-        for(int i = 0; i < billboardList.size(); i ++){
-            for(int j = i + 1; j < billboardList.size(); j ++){
-                if(billboardList.get(i).getInf() + billboardList.get(j).getInf() > billboardSet.inf
-                        && billboardList.get(i).getPrice() + billboardList.get(j).getPrice() <= budget){
+        for (int i = 0; i < billboardList.size(); i++) {
+            for (int j = i + 1; j < billboardList.size(); j++) {
+                // If two billboards have bigger influence under budget, assign them to result instead
+                if (billboardList.get(i).getInf() + billboardList.get(j).getInf() > billboardSet.inf
+                        && billboardList.get(i).getPrice() + billboardList.get(j).getPrice() <= budget) {
                     BillboardSet maxInfBoards = new BillboardSet();
                     maxInfBoards.addBoard(billboardList.get(i));
                     maxInfBoards.addBoard(billboardList.get(j));
-                    // If two billboards have bigger influence under budget, assign them to result instead
                     billboardSet = maxInfBoards;
                 }
-             }
+            }
         }
         // Now the result should have max influence under budget set H1
         return billboardSet;
@@ -108,139 +107,107 @@ public class EnumSel {
      * Partition the original billboards with each set has 3 billboards
      * Then greedily insert the next max influence board for each set until budget is consumed
      **/
-    public BillboardSet phaseTwo(List<Billboard> billboardList){
+    public BillboardSet phaseTwo(List<Billboard> billboardList) {
 
-        // Initiates
-        int totalMoney = budget;
-        List<Billboard> billboardsListCopy = new ArrayList<>(billboardList);
+        ArrayList<BillboardSet> resultArray = new ArrayList<>();
+        BillboardSet phaseTwoResult = new BillboardSet();
 
-        BillboardSet greedilyAddedResult = new BillboardSet();
-        BillboardCombination maxInfComb1 = new BillboardCombination();
-        BillboardSet stepOneResult = new BillboardSet();
-        BillboardSet stepTwoResult = new BillboardSet();
-        // Array to contain step two results in array format
-        ArrayList<BillboardSet> stepTwoSetsArray = new ArrayList<>();
-        ArrayList<BillboardCombination> combinationsList = new ArrayList<>();
+        // Step One:
+        // Select tau + 1 boards
+        // Add each combination into an array
+        ArrayList<BillboardCombination> combinationsArrayList = new ArrayList<>();
 
-
-        // Step One
-        // Get all combination of three elements within budget
-        // Create an object for each combination
-        // Create an arraylist for all combinations
-        for(int i = 0; i < billboardsListCopy.size(); i ++){
-            for(int j = i + 1; j < billboardsListCopy.size(); j ++){
-                for(int c = j + 1; c < billboardsListCopy.size(); c ++){
-                    // if under budget, add to the combination && combination list
-                    if(billboardsListCopy.get(i).getPrice()
-                            + billboardsListCopy.get(j).getPrice()
-                            + billboardsListCopy.get(c).getPrice() <= budget){
+        for (int i = 0; i < billboardList.size(); i++) {
+            for (int j = i + 1; j < billboardList.size(); j++) {
+                for (int c = j + 1; c < billboardList.size(); c++) {
+                    if (billboardList.get(i).getPrice()
+                            + billboardList.get(j).getPrice()
+                            + billboardList.get(c).getPrice() <= budget) {
                         BillboardCombination combination = new BillboardCombination();
                         combination.board1 = i;
                         combination.board2 = j;
                         combination.board3 = c;
-                        combination.combinationMoney = billboardsListCopy.get(i).getPrice()
-                                + billboardsListCopy.get(j).getPrice()
-                                + billboardsListCopy.get(c).getPrice();
-                        combination.inf = billboardsListCopy.get(i).getInf()
-                                + billboardsListCopy.get(j).getInf()
-                                + billboardsListCopy.get(c).getInf();
-                        // Add into an array list
-                        combinationsList.add(combination);
+                        combination.combinationMoney = billboardList.get(i).getPrice()
+                                + billboardList.get(j).getPrice()
+                                + billboardList.get(c).getPrice();
+                        combination.inf = billboardList.get(i).getInf()
+                                + billboardList.get(j).getInf()
+                                + billboardList.get(c).getInf();
+                        // Add into an arrayList
+                        combinationsArrayList.add(combination);
                     }
                 }
             }
         }
 
-        // If the three combination under budget exists, assign to step two result
-        if(combinationsList.size() != 0) {
-
-            // Get the combination with the highest influence
-            maxInfComb1 = Collections.max(combinationsList, Comparator.comparing(b -> b.inf));
-
-            // Convert the max inf combination into billboard sets
-            stepOneResult.addBoard(billboardsListCopy.get(maxInfComb1.board1));
-            stepOneResult.addBoard(billboardsListCopy.get(maxInfComb1.board2));
-            stepOneResult.addBoard(billboardsListCopy.get(maxInfComb1.board3));
-
-            // Step Two
-            // Greedily insert the next max influence board into each set until budget is consumed
-            for (int i = 0; i < combinationsList.size(); i++) {
-                BillboardCombination oneCombination = combinationsList.get(i);
-                if (totalMoney - oneCombination.combinationMoney > 0) {
-                    // Call helper method to insert more billboards (as a set) greedily
-                    greedilyAddedResult = insertMore(oneCombination);
-                    stepTwoSetsArray.add(greedilyAddedResult);
-                    break;
-                }
+        // Step two
+        // Greedily insert more billboards into the result from step one
+        for (int i = 0; i < combinationsArrayList.size(); i++) {
+            BillboardCombination oneCombination = combinationsArrayList.get(i);
+            if (oneCombination.combinationMoney < budget) {
+                // Call helper method to insert more billboards greedily
+                BillboardSet greedyResult = new BillboardSet();
+                greedyResult = insertMore(oneCombination);
+                // add result into arraylist
+                resultArray.add(greedyResult);
             }
-            // Get the combination with the highest influence
-            if(stepTwoSetsArray.size() != 0){
-                stepTwoResult = Collections.max(stepTwoSetsArray, Comparator.comparing(b -> b.inf));
-            }else{
-                stepTwoResult = null;
-            }
-        } else{
-            stepTwoResult = null;
         }
 
-
-        // Step Three
-        // Compare results from the two steps
-        if( stepTwoResult == null || (stepOneResult.inf > stepTwoResult.inf) ){
-            return stepOneResult;
-        }else{
-            return stepTwoResult;
+        // get the set with highest influence
+        if (resultArray.size() != 0) {
+            phaseTwoResult = Collections.max(resultArray, Comparator.comparing(b -> b.inf));
         }
+        return phaseTwoResult;
     }
 
 
     /**
-     * Helper method for phase two, step two
+     * Helper method for phase two
      * insert the next max inf billboard into the combination sets
-     * using greedySel
+     * use greedySel
      **/
-    public BillboardSet insertMore(BillboardCombination combinations){
+    public BillboardSet insertMore(BillboardCombination combinations) {
 
         // Initiates
         int totalMoney = budget;
-        List<Billboard> billboardListCopy = new ArrayList<Billboard>(billboardList);
-        ArrayList<Billboard> billboardArrayList = (ArrayList) billboardListCopy;
+        ArrayList<Billboard> billboardListCopy = (ArrayList<Billboard>) billboardList.clone();
+        BillboardSet resultSet = new BillboardSet();
 
-        BillboardSet billboardSetBase = new BillboardSet();
-        BillboardSet billboardSetResult = new BillboardSet();
+        // Assign three boards from the combination
+        Billboard board1 = billboardListCopy.get(combinations.board1);
+        Billboard board2 = billboardListCopy.get(combinations.board2);
+        Billboard board3 = billboardListCopy.get(combinations.board3);
 
-        // Assign three boards from the combination lists
-        Billboard board1 = billboardArrayList.get(combinations.board1);
-        Billboard board2 = billboardArrayList.get(combinations.board2);
-        Billboard board3 = billboardArrayList.get(combinations.board3);
+        // Add them to the result set
+        resultSet.addBoard(board1);
+        resultSet.addBoard(board2);
+        resultSet.addBoard(board3);
 
-        // Add the three boards to billboard set base
-        billboardSetBase.addBoard(board1);
-        billboardSetBase.addBoard(board2);
-        billboardSetBase.addBoard(board3);
+        // Remove them from total billboardList
+        billboardListCopy.remove(board1);
+        billboardListCopy.remove(board2);
+        billboardListCopy.remove(board3);
 
-        // Remove the three boards from the total billboards list
-        billboardArrayList.remove(board1);
-        billboardArrayList.remove(board2);
-        billboardArrayList.remove(board3);
-
-        // Reduce budget as three boards are already selected
+        // Reduce budget as the boards are already selected
         totalMoney -= combinations.combinationMoney;
 
-        // Use greedySel to insert the next marginal max inf boards until budget run out
-        ArrayList<Billboard> insertSetResult = new ArrayList<>();
-        GreedySel greedy = new GreedySel(totalMoney, billboardArrayList);
+        // Use greedySel to insert more
+        ArrayList<Billboard> greedyResult = new ArrayList<>();
+        GreedySel greedy = new GreedySel(totalMoney, billboardListCopy);
         greedy.generateSolution();
-        insertSetResult = greedy.resultList;
+        greedyResult.addAll(greedy.resultList);
 
-        // Convert greedy results into billboard set
-        for(int i = 0; i < insertSetResult.size(); i ++){
-            billboardSetResult.addBoard(insertSetResult.get(i));
+        if (greedyResult.size() == 0) {
+            // if greedyResult returns null, return the same billboard set
+            return resultSet;
+        } else {
+            // else add the greedy result into billboard set and return
+            for (int i = 0; i < greedyResult.size(); i++) {
+                resultSet.addBoard(greedyResult.get(i));
+            }
+            return resultSet;
         }
 
-        // Add the greedy results (set format) into base set (set format)
-        billboardSetBase.addBoardSets(billboardSetResult);
+    }// end of InsertMore
 
-        return billboardSetBase;
-    }
-}
+}// end of EnumSel

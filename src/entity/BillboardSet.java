@@ -19,6 +19,7 @@ public class BillboardSet {
 
     public void addBoard(Billboard billboard){
         billboardsInfoArray.add(billboard.getBillboardID() + "," + billboard.getInf() + "," + billboard.getPrice());
+        billboardId += billboard.getBillboardID() + ",";
         inf += billboard.getInf();
         cost += billboard.getPrice();
         boardsNum ++;
@@ -26,6 +27,7 @@ public class BillboardSet {
 
     public void addBoardSets(BillboardSet oneSet){
         billboardsInfoArray.addAll(oneSet.billboardsInfoArray);
+        billboardId += oneSet.billboardId;
         inf += oneSet.inf;
         cost += oneSet.cost;
         boardsNum += oneSet.boardsNum;
