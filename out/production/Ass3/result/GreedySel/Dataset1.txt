@@ -8,4 +8,4 @@ influence:594
 414 | 77 | 13
 437 | 77 | 13
 152 | 23 | 6
-Running time (ms):9
+Running time (ms):12

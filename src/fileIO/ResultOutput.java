@@ -30,10 +30,6 @@ public class ResultOutput {
         }
         result.add("budget:" + budget + "\r\n");
         result.add("influence:" + influence + "\r\n");
-        for(int i = 0; i < billboardList.size(); i ++){
-            result.add(billboardList.get(i).getBillboardID() + " | " +  String.valueOf(billboardList.get(i).getInf()) + " | " + String.valueOf(billboardList.get(i).getPrice() + "\n"));
-        }
-
     }
 
     public void addRunningTime(long time) {

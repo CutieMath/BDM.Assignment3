@@ -25,4 +25,4 @@ influence:1717
 487 | 65 | 12
 489 | 59 | 11
 391 | 53 | 10
-Running time (ms):17388
+Running time (ms):17726

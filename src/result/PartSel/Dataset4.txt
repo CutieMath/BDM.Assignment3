@@ -1,3 +1,3 @@
-budget:0
-influence:0
-Running time (ms):0
+budget:200
+influence:1228
+Running time (ms):10822

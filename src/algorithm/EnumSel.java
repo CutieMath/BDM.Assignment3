@@ -43,22 +43,29 @@ public class EnumSel {
             resultOneList.add(billboard);
         }
 
-        for (int i = 0; i < resultTwo.billboardsInfoArray.size(); i++) {
-            String content[] = resultTwo.billboardsInfoArray.get(i).split(",");
-            String billboardID = content[0];
-            int billboardInf = Integer.parseInt(content[1]);
-            int billboardPrice = Integer.parseInt(content[2]);
-            Billboard billboard = new Billboard(billboardID, billboardInf, billboardPrice);
-            resultTwoList.add(billboard);
+        // if second resultset is not empty
+        if(resultTwo.inf != 0) {
+            for (int i = 0; i < resultTwo.billboardsInfoArray.size(); i++) {
+                String content[] = resultTwo.billboardsInfoArray.get(i).split(",");
+                String billboardID = content[0];
+                int billboardInf = Integer.parseInt(content[1]);
+                int billboardPrice = Integer.parseInt(content[2]);
+                Billboard billboard = new Billboard(billboardID, billboardInf, billboardPrice);
+                resultTwoList.add(billboard);
+            }
         }
 
 
         // Compare H1 & H2
         // Return the sets with the highest influence under budget
-        if (resultOne.inf > resultTwo.inf) {
+        if(resultTwo.inf != 0) {
+            if (resultOne.inf > resultTwo.inf) {
+                resultList = resultOneList;
+            } else {
+                resultList = resultTwoList;
+            }
+        }else{
             resultList = resultOneList;
-        } else {
-            resultList = resultTwoList;
         }
 
     }

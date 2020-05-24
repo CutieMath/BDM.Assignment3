@@ -1,3 +1,10 @@
-budget:0
-influence:0
-Running time (ms):0
+budget:100
+influence:624
+498 | 87 | 14
+497 | 88 | 14
+466 | 92 | 15
+499 | 91 | 14
+441 | 87 | 14
+476 | 93 | 15
+496 | 86 | 14
+Running time (ms):4083
