@@ -1,8 +1,3 @@
 budget:50
 influence:267
-319 | 54 | 10
-452 | 83 | 14
-87 | 13 | 4
-334 | 66 | 12
-320 | 51 | 10
-Running time (ms):11
+Running time (ms):14
