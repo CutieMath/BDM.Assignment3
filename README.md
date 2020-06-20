@@ -1,6 +1,5 @@
 # BDM.Assignment3
 
-This repo is my 2020 Semester One assignment <br>
 Subject: Big Data Management <br>
 Assignment: Billboard selection <br>
 The program is implemented based on <br>
