@@ -9,7 +9,7 @@
 1. Use src/generator/BillboardGenerator.java and ClusterGenerator.java to generate new billboards and clusters for the program.
 2. Run src/Main.java
 3. Check results in src/result  
-(Note: the results will be different from answer as billboard data are generated randomly)<br><br>
+(Note: the results are different from the answer folder as billboard data were generated randomly)<br><br>
 
 **Implementation**  
 The three algorithms are in src/algorithm<br><br>
