@@ -17,5 +17,5 @@ The three algorithms are in src/algorithm<br><br>
 **Notes**  
 The program can product accurate result.<br>
 However the efficiency is not optimal.<br>
-Update: greedySel is not entirely correct, uni said they can't provide test data they used for marking. Need to debug greedySel  
+Update: greedySel is not entirely correct, uni said they can't provide test data used for marking. Need to debug greedySel  
 The repo is made public. :partying_face:
