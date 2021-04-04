@@ -15,6 +15,6 @@
 The three algorithms are in src/algorithm<br><br>
 
 **Notes**  
-The program can product accurate result.<br>
+The program can produce accurate result.<br>
 However the efficiency is not optimal.<br>
 The repo is made public for improvements.
